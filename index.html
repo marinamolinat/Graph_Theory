@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quick Sigma.js Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
+  </head>
+  <body style="background: rgb(165, 5, 5)">
+    <div id="container" style="width: 800px; height: 600px; background: white"></div>
+    <script>
+
+        const graph = new graphology.Graph();
+
+        // make the size of a board
+        let n = 8;
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                 graph.addNode(`(${i}, ${j})`, { x: j, y: i, size: 10, color: "red"});
+
+               
+            }
+          
+        }
+
+
+      // Create a graphology graph
+      
+
+
+      // Instantiate sigma.js and render the graph
+      const sigmaInstance = new Sigma(graph, document.getElementById("container"));
+    </script>
+  </body>
+</html>
