@@ -6,17 +6,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
   </head>
-  <body style="background: rgb(165, 5, 5)">
-    <div id="container" style="width: 800px; height: 600px; background: white"></div>
+  <body>
+    <div id="container" style="width: 800px; height: 600px; background: white; border-width: 5px; border-style: solid; border-radius: 10px;"></div>
     <script>
 
-        const graph = new graphology.Graph();
+        const graph = new graphology.Graph({type: 'directed'});
 
         // make the size of a board
         let n = 8;
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red" });
+                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red", label: `(${j}, ${i})` });
 
             }
           
@@ -40,11 +40,16 @@
                 let toId = `(${newX}, ${newY})`;
 
                 if (graph.hasNode(toId)) {
-                graph.addEdge(node, toId);
-                }
+                graph.addDirectedEdge(node, toId, {type: 'arrow', size: 4});
+                } 
             }
 
         });
+
+                graph.forEachOutboundNeighbor('(3, 4)', (neighbor) => {
+        console.log(`(3, 4) → ${neighbor}`);
+        });
+
 
 
         // Add edges based on the movement rules
