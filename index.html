@@ -2,12 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Quick Sigma.js Example</title>
+    <title>Dominating sets in pawn graphs</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+
   </head>
   <body>
+    <h1>Dominating sets in pawn graphs</h1>
+    <h3>By Marina M for math EE</h3>
+
     <div id="container" style="width: 800px; height: 600px; background: white; border-width: 5px; border-style: solid; border-radius: 10px;"></div>
+    <p>8x8 board</p>
     <script>
 
         const graph = new graphology.Graph({type: 'directed'});
@@ -46,9 +52,30 @@
 
         });
 
-                graph.forEachOutboundNeighbor('(3, 4)', (neighbor) => {
-        console.log(`(3, 4) → ${neighbor}`);
-        });
+        //Superbad, brute force algorith to find domination number, please help, this will probably be shit
+        function findDominationNumber(graph) {
+            let dominatingSet = new Set();
+            let nodes = graph.nodes();
+            let visited = new Set();
+
+            for (let node of nodes) {
+                if (!visited.has(node)) {
+                    dominatingSet.add(node);
+                    visited.add(node);
+
+                    // Mark all neighbors as dominated
+                    graph.forEachNeighbor(node, (neighbor) => {
+            
+                        visited.add(neighbor);
+                    });
+                }
+            }
+
+            return dominatingSet.size;
+        }
+
+
+       console.log("Dominating set size:", findDominationNumber(graph));
 
 
 
