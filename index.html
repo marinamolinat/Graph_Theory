@@ -19,7 +19,7 @@
         const graph = new graphology.Graph({type: 'directed'});
 
         // make the size of a board
-        let n = 4;
+        let n = 3;
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
                  graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red", label: `(${j}, ${i})` });
@@ -53,8 +53,11 @@
 
         });
 
+        //Superbad, brute force algorith to find domination number, please help, this will probably be shit
         
+        //rn it just displays the size of A dominating set, not the domination number
 
+        
         function isSetDominating(graph, nodes) {
             const visited = new Set();
             for (const node of nodes) {
@@ -80,42 +83,76 @@
         }
 
 
-function dominationNumber(graph) {
-    const nodes = graph.nodes();
-    let minSet = null;
+        function noName(graph, nodes){
+            for (let node of nodes){
+                const nodesCopy = structuredClone(nodes);
 
-    // generats all subsets of nodes
-    function* subsets(arr, k = 0, curr = []) {
-        if (k === arr.length) {
-            yield curr;
-            return;
+                  //find the value to remove
+                const index = nodesCopy.indexOf(node);
+                nodesCopy.splice(index, 1);
+
+
+                const isDominating = isSetDominating(graph, nodesCopy);
+
+
+                if (isDominating){
+                    
+
+                    findDominationNumber(graph, nodesCopy);
+
+
+                }
+
+
+            }
+
+
         }
-        yield* subsets(arr, k + 1, curr);
-        yield* subsets(arr, k + 1, curr.concat([arr[k]]));
-    }
 
-    let minSize = nodes.length + 1;
-    for (const subset of subsets(nodes)) {
-        if (subset.length === 0) continue;
-        if (subset.length >= minSize) continue;
-        if (isSetDominating(graph, subset)) {
-            minSize = subset.length;
-            minSet = subset;
-        }
-    }
-    return { number: minSize, set: minSet };
-}
-
-// Example usage:
-const result = dominationNumber(graph);
-console.log("Domination number:", result.number, "Set:", result.set);
+        let minNum = Infinity;  
+        function findDominationNumber(graph, nodes) {
+           
 
 
+            
 
+            for (let node of nodes) {
+
+                //create a copy of the node set
+                const nodesCopy = structuredClone(nodes);
+
+                //find the value to remove
+                const index = nodesCopy.indexOf(node);
+                nodesCopy.splice(index, 1);
+            
+
+                //Check that the array of nodes is dominative
+                const isDominating = isSetDominating(graph, nodesCopy);
        
+         
+
+                if (isDominating){
+                   
+
+                    if (nodesCopy.length < minNum) {
+                        minNum = nodesCopy.length;
+                        console.log("new min", minNum);
+                    }
+                    //recursion babyyy
+                    findDominationNumber(graph, nodesCopy);
 
 
-      
+                }
+               
+                
+
+
+            }
+
+        }
+
+
+       console.log("checking some stuff", noName(graph, graph.nodes()));
        
        
 
