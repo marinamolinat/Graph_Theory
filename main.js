@@ -1,5 +1,15 @@
 
-console.log("Hello, world!");
+
+
+
+const myWebWorker = new Worker('webWorker.js');
+myWebWorker.postMessage("Hi, worker!");
+
+myWebWorker.addEventListener("message", ({ data }) => {
+  // Echoes "Hello, window!" to the console from the worker.
+  console.log(data);
+});
+
  const graph = new graphology.Graph({type: 'directed'});
 
 
@@ -149,6 +159,7 @@ console.log("Hello, world!");
       const sigmaInstance = new Sigma(graph, document.getElementById("container"));
       
      
+
 
 
  

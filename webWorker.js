@@ -1,4 +1,13 @@
 
+
+self.addEventListener("message", () => {
+
+  // Sends a message of "Hellow, window!" from the web worker:
+  self.postMessage("Hello, window!");
+});
+
+
+
 function isSetDominating(graph, nodes) {
             const visited = new Set();
             for (const node of nodes) {
