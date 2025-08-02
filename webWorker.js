@@ -46,16 +46,13 @@ self.addEventListener("message", (event) => {
     console.log("Starting to work with data: ", event.data);
     minNum = Infinity; 
 
-    
 
    //rebuilt the graph from the input, lazy to do it a more efficient way
    const graph = builtGraph(event.data);
 
 
-
-
    //calculate the domination number
-   noName(graph);
+   findDominationNumber(graph);
    console.log("minNum:", minNum);
 
    
@@ -92,7 +89,7 @@ function isSetDominating(graph, nodes) {
         }
 
 
-        function noName(graph){
+        function findDominationNumber(graph){
             const nodes = graph.nodes();
             
             for (let node of nodes){
@@ -109,7 +106,7 @@ function isSetDominating(graph, nodes) {
                 if (isDominating){
                     
 
-                    findDominationNumber(graph, nodesCopy);
+                    search(graph, nodesCopy);
 
 
                 }
@@ -121,7 +118,7 @@ function isSetDominating(graph, nodes) {
         }
 
         
-        function findDominationNumber(graph, nodes) {
+        function search(graph, nodes) {
            
 
 
@@ -150,7 +147,7 @@ function isSetDominating(graph, nodes) {
                
                     }
                     //recursion babyyy
-                    findDominationNumber(graph, nodesCopy);
+                    search(graph, nodesCopy);
 
 
                 }

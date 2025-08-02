@@ -1,7 +1,7 @@
 
 
 const submitButton = document.getElementById("submit");
-const myWebWorker = new Worker('webWorker.js');
+let myWebWorker;
 const graph = new graphology.Graph({type: 'directed'});
 const sigmaInstance = new Sigma(graph, document.getElementById("container"));
 updateGraph(3); //Defeaul graph will have n=3
@@ -9,7 +9,15 @@ updateGraph(3); //Defeaul graph will have n=3
 
 
 submitButton.addEventListener("click", function(){
+
+    if(myWebWorker){
+        myWebWorker.terminate();
+    }
+
+    myWebWorker = new Worker('webWorker.js');
+
     const input = document.getElementById("inputN");
+
 
     //Re draw the graph
    updateGraph(input.value);
@@ -22,9 +30,7 @@ submitButton.addEventListener("click", function(){
 
 
 
-myWebWorker.addEventListener("message", ({ data }) => {
-  console.log("Servie worker says: " + data)
-});
+
 
 
 
