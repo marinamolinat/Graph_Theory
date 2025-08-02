@@ -1,7 +1,65 @@
+importScripts('https://unpkg.com/graphology@0.24.1/dist/graphology.umd.min.js');
+
+let minNum = Infinity;  
+function builtGraph(n)
+{
+    const graph = new graphology.Graph({type: 'directed'});
+       // add the vertices
+    for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red"});
+
+            }
+          
+        }
+    
+    const movement = [
+        [-1, 1], //diagonally  left
+        [1, 1], // diagonally right
+            
+    ];      
+    
+    
+    //Connect each vertoces to corresponding edge
+    graph.forEachNode((node, attributes) => {
+            
+
+            
+            for (let [dx, dy] of movement) {
+                let newX = attributes.x + dx;
+                let newY = attributes.y + dy;
+
+                
+                let toId = `(${newX}, ${newY})`;
+
+                if (graph.hasNode(toId)) {
+                graph.addDirectedEdge(node, toId, {type: 'arrow', size: 4});
+               
+                } 
+            }
+
+        });
+    return graph;
+}
 
 self.addEventListener("message", (event) => {
+    console.log("Starting to work with data: ", event.data);
+    minNum = Infinity; 
 
-   console.log("HEYY")
+    
+
+   //rebuilt the graph from the input, lazy to do it a more efficient way
+   const graph = builtGraph(event.data);
+
+
+
+
+   //calculate the domination number
+   noName(graph);
+   console.log("minNum:", minNum);
+
+   
+
 });
 
 
@@ -34,7 +92,9 @@ function isSetDominating(graph, nodes) {
         }
 
 
-        function noName(graph, nodes){
+        function noName(graph){
+            const nodes = graph.nodes();
+            
             for (let node of nodes){
                 const nodesCopy = structuredClone(nodes);
 
@@ -60,7 +120,7 @@ function isSetDominating(graph, nodes) {
 
         }
 
-        let minNum = Infinity;  
+        
         function findDominationNumber(graph, nodes) {
            
 
@@ -87,7 +147,7 @@ function isSetDominating(graph, nodes) {
 
                     if (nodesCopy.length < minNum) {
                         minNum = nodesCopy.length;
-                        console.log("new min", minNum);
+               
                     }
                     //recursion babyyy
                     findDominationNumber(graph, nodesCopy);
