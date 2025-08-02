@@ -55,6 +55,8 @@ self.addEventListener("message", (event) => {
    findDominationNumber(graph);
    console.log("minNum:", minNum);
 
+   postMessage(minNum);
+
    
 
 });
@@ -86,13 +88,17 @@ function isSetDominating(graph, nodes) {
 
             }
             return visited.size === graph.order;
-        }
+}
 
 
-        function findDominationNumber(graph){
-            const nodes = graph.nodes();
+function findDominationNumber(graph){
+    //First, we convert the graph nodes into a bitmap, for efficency :)
+   
+
+
+    const nodes = graph.nodes();
             
-            for (let node of nodes){
+    for (let node of nodes){
                 const nodesCopy = structuredClone(nodes);
 
                   //find the value to remove
@@ -112,13 +118,13 @@ function isSetDominating(graph, nodes) {
                 }
 
 
-            }
+   }
 
 
-        }
+}
 
         
-        function search(graph, nodes) {
+function search(graph, nodes) {
            
 
 
@@ -157,4 +163,4 @@ function isSetDominating(graph, nodes) {
 
             }
 
-        }
+}

@@ -1,10 +1,12 @@
 
 
 const submitButton = document.getElementById("submit");
-let myWebWorker;
+let myWebWorker = new Worker('webWorker.js');
 const graph = new graphology.Graph({type: 'directed'});
 const sigmaInstance = new Sigma(graph, document.getElementById("container"));
 updateGraph(3); //Defeaul graph will have n=3
+const loadingDisplay = document.getElementById("loading");
+const resultDisplayer = document.getElementById("result");
 
 
 
@@ -18,12 +20,32 @@ submitButton.addEventListener("click", function(){
 
     const input = document.getElementById("inputN");
 
+    console.log(Number.isInteger(input.value));
+
+    if (input.value > 30 || input.value < 2 || !Number.isInteger(Number(input.value))){
+        alert("Please choose a number between 2 and 30 inclusive, it should be a whole number");
+        return;
+    }
+
 
     //Re draw the graph
    updateGraph(input.value);
 
     //Now, lets send the input value to the web worker
     myWebWorker.postMessage(input.value);
+
+    loadingDisplay.style.display = "flex";
+
+    
+
+    //Receiving the message
+    myWebWorker.onmessage = function(event) {
+         loadingDisplay.style.display = "none";
+         resultDisplayer.innerHTML = `RESULT: ${event.data}`;
+        
+
+    };
+
 
 })
 
@@ -89,104 +111,8 @@ function updateGraph (n){
        
         
 
-        //Superbad, brute force algorith to find domination number, please help, this will probably be shit
-        
-        //rn it just displays the size of A dominating set, not the domination number
-
-        
-        function isSetDominating(graph, nodes) {
-            const visited = new Set();
-            for (const node of nodes) {
-                //mark node as visited, if it hasnt been already marked
-
-                if (!visited.has(node)){
-                    visited.add(node);
-                }
-
-
-            
-            
-                graph.forEachOutboundNeighbor(node, (neighbor) => {
-                        if (!visited.has(neighbor)) {
-                            visited.add(neighbor);
-                        }
-                
-                    });
-
-
-            }
-            return visited.size === graph.order;
-        }
-
-
-        function noName(graph, nodes){
-            for (let node of nodes){
-                const nodesCopy = structuredClone(nodes);
-
-                  //find the value to remove
-                const index = nodesCopy.indexOf(node);
-                nodesCopy.splice(index, 1);
-
-
-                const isDominating = isSetDominating(graph, nodesCopy);
-
-
-                if (isDominating){
-                    
-
-                    findDominationNumber(graph, nodesCopy);
-
-
-                }
-
-
-            }
-
-
-        }
-
-        let minNum = Infinity;  
-        function findDominationNumber(graph, nodes) {
-           
-
-
-            
-
-            for (let node of nodes) {
-
-                //create a copy of the node set
-                const nodesCopy = structuredClone(nodes);
-
-                //find the value to remove
-                const index = nodesCopy.indexOf(node);
-                nodesCopy.splice(index, 1);
-            
-
-                //Check that the array of nodes is dominative
-                const isDominating = isSetDominating(graph, nodesCopy);
        
-         
-
-                if (isDominating){
-                   
-
-                    if (nodesCopy.length < minNum) {
-                        minNum = nodesCopy.length;
-                        console.log("new min", minNum);
-                    }
-                    //recursion babyyy
-                    findDominationNumber(graph, nodesCopy);
-
-
-                }
-               
-                
-
-
-            }
-
-        }
-
+       
 
        
        

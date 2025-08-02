@@ -30,3 +30,7 @@ function
 
 }
 
+Currently tweaking cause why is the algorithm so slow. :((
+
+im going to have to learn bitmasks or smth
+
