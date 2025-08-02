@@ -26,6 +26,8 @@ body{
 
 #left, #right {
     width: 25%;
+    border-style: solid;
+    margin: 10px;
 }
 
 #content {
@@ -36,4 +38,8 @@ body{
 form {
     display: flex;
     flex-direction: column;
+}
+
+input{
+    width: 100px;
 }

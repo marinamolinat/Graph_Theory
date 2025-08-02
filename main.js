@@ -1,43 +1,64 @@
 
 
-
-
+const submitButton = document.getElementById("submit");
 const myWebWorker = new Worker('webWorker.js');
-myWebWorker.postMessage("Hi, worker!");
+const graph = new graphology.Graph({type: 'directed'});
+const sigmaInstance = new Sigma(graph, document.getElementById("container"));
+updateGraph(3); //Defeaul graph will have n=3
+
+
+
+submitButton.addEventListener("click", function(){
+    const input = document.getElementById("inputN");
+
+    //Re draw the graph
+   updateGraph(input.value);
+
+    //Now, lets send the input value to the web worker
+    myWebWorker.postMessage(input.value);
+
+})
+
+
+
 
 myWebWorker.addEventListener("message", ({ data }) => {
-  // Echoes "Hello, window!" to the console from the worker.
-  console.log(data);
+  console.log("Servie worker says: " + data)
 });
 
- const graph = new graphology.Graph({type: 'directed'});
 
 
-        // make the size of a board
-        let n = 3;
-        for (let i = 0; i < n; i++) {
+
+function updateGraph (n){
+    graph.clear();
+ 
+
+       // add the vertices
+    for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red", label: `(${j}, ${i})` });
+                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red"});
 
             }
           
         }
-
-        const movement = [
-            [-1, 1], //diagonally  left
-            [1, 1], // diagonally right
+    
+    const movement = [
+        [-1, 1], //diagonally  left
+        [1, 1], // diagonally right
             
-        ];
-
-        graph.forEachNode((node, attributes) => {
+    ];      
+    
+    
+    //Connect each vertoces to corresponding edge
+    graph.forEachNode((node, attributes) => {
             
 
-            // Example: use attributes.x and attributes.y for movement
+            
             for (let [dx, dy] of movement) {
                 let newX = attributes.x + dx;
                 let newY = attributes.y + dy;
 
-                // Build ID of potential destination node
+                
                 let toId = `(${newX}, ${newY})`;
 
                 if (graph.hasNode(toId)) {
@@ -47,6 +68,20 @@ myWebWorker.addEventListener("message", ({ data }) => {
             }
 
         });
+    sigmaInstance.refresh(); 
+
+    
+}
+
+
+
+
+
+
+ 
+
+       
+        
 
         //Superbad, brute force algorith to find domination number, please help, this will probably be shit
         
@@ -147,7 +182,7 @@ myWebWorker.addEventListener("message", ({ data }) => {
         }
 
 
-       console.log("checking some stuff", noName(graph, graph.nodes()));
+       
        
        
 
@@ -155,9 +190,6 @@ myWebWorker.addEventListener("message", ({ data }) => {
     
 
 
-      // Instantiate sigma.js and render the graph
-      const sigmaInstance = new Sigma(graph, document.getElementById("container"));
-      
      
 
 
