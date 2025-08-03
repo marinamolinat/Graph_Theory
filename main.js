@@ -1,5 +1,4 @@
 
-
 const submitButton = document.getElementById("submit");
 let myWebWorker = new Worker('webWorker.js');
 const graph = new graphology.Graph({type: 'directed'});
@@ -8,9 +7,10 @@ updateGraph(3); //Defeaul graph will have n=3
 const loadingDisplay = document.getElementById("loading");
 const resultDisplayer = document.getElementById("result");
 
-
+loadingDisplay.style.display = "none"; //Hide the loading display by default
 
 submitButton.addEventListener("click", function(){
+
 
     if(myWebWorker){
         myWebWorker.terminate();
@@ -20,6 +20,7 @@ submitButton.addEventListener("click", function(){
 
     const input = document.getElementById("inputN");
 
+    resultDisplayer.innerHTML = "Result: ";
     console.log(Number.isInteger(input.value));
 
     if (input.value > 30 || input.value < 2 || !Number.isInteger(Number(input.value))){
@@ -41,7 +42,7 @@ submitButton.addEventListener("click", function(){
     //Receiving the message
     myWebWorker.onmessage = function(event) {
          loadingDisplay.style.display = "none";
-         resultDisplayer.innerHTML = `RESULT: ${event.data}`;
+         resultDisplayer.innerHTML = `Result: ${event.data}`;
         
 
     };

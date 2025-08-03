@@ -52,6 +52,7 @@ self.addEventListener("message", (event) => {
 
 
    //calculate the domination number
+   
    findDominationNumber(graph);
    console.log("minNum:", minNum);
 
@@ -93,9 +94,20 @@ function isSetDominating(graph, nodes) {
 
 function findDominationNumber(graph){
     //First, we convert the graph nodes into a bitmap, for efficency :)
+
+  const totalBits = BigInt(graph.order);
+  
+  const bitNodes =  (BigInt(1) << totalBits) - BigInt(1);
+ 
+  
    
+  //iterate through the graph order, remove a single node at a time
+  for (let i = 0; i < graph.order; i++) {
 
+    //convert the i-th bit to 
+    console.log("i:", i);
 
+  }
     const nodes = graph.nodes();
             
     for (let node of nodes){
@@ -121,7 +133,11 @@ function findDominationNumber(graph){
    }
 
 
+
 }
+
+
+
 
         
 function search(graph, nodes) {

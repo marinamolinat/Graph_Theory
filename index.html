@@ -24,7 +24,8 @@
       <div id="left">
           <h1>Context</h1>
           <p><a href="https://en.wikipedia.org/wiki/Graph_theory" target="_blank">Graph Theory</a> is a field in mathematics concerned with studying stuctured called graphs.
-          Many math puzzles can be explored through the lens of graph theory, in particular, this site aims to explore <a href="https://en.wikipedia.org/wiki/Mathematical_chess_problem#Domination_problems"  target="_blank">domination problems</a> relating to pawns</p>
+          Many math puzzles can be explored through this field, in particular, this site aims to explore <a href="https://en.wikipedia.org/wiki/Mathematical_chess_problem#Domination_problems"  target="_blank">the domination number</a> of pawns. Here n represents the width and height of a chess board.
+        A directed pawn graph is shown, where the problem can be vizulized. </p>
       </div>
 
 
@@ -32,23 +33,33 @@
       <div id="right">
         <h2>n = ?</h2>
         <p>Please input a  number for n, this will determine the size of the board</p>
-        <div>
+        <div style="display: flex;">
 
 
-        <input id="inputN" type="number" value="3">
-        <button id="submit">submit</button>
+      
+        <div class="input-group flex-nowrap" style="width:150px">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="addon-wrapping">n =</span>
+          </div>
+          <input id="inputN" type="number" class="form-control" value="3" aria-describedby="addon-wrapping">
+        </div>
+        <button  class="btn btn-dark" id="submit">submit</button>
 
         </div>
 
-        <div id="loading" style="display: none;">
-        
+        <div style="display: flex; margin-top: 10px;">
+
+       
+          <h4 id="result">Result: </h4>
+          <div style="margin-left: 10px;"id="loading" style="display: none;">
+          
           <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-        </div>
-        <p>Loading, this might take a while...</p>
+          <span class="sr-only">Loading...</span>
+          </div>
+     
 
-        </div>
-        <p id="result">Result: </p>
+          </div>
+         </div>
         
 
 

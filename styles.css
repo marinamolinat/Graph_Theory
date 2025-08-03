@@ -10,7 +10,7 @@ body{
     margin-bottom: 20px;
     
 }
-h1, h2 {
+h1, h2, h3, h4 {
     font-weight: bold;
 }
 #heading h2 {
@@ -48,12 +48,13 @@ h1, h2 {
       gap: 10px;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
 
-}
+
 
 input{
-    width: 100px;
+    width: 50px !important;
+    border-radius: 4px;
 }
+
+
+
