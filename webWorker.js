@@ -2,6 +2,31 @@ importScripts('https://unpkg.com/graphology@0.24.1/dist/graphology.umd.min.js');
 
 let minNum = Infinity;  
 
+
+
+
+self.addEventListener("message", (event) => {
+    console.log("Starting to work with data: ", event.data);
+    minNum = Infinity; 
+
+
+   //rebuilt the graph from the input, lazy to do it a more efficient way
+   const graph = builtGraph(event.data);
+
+
+   //calculate the domination number
+
+   findDominationNumber(graph);
+   console.log("minNum:", minNum);
+
+   postMessage(minNum);
+
+   
+
+});
+
+
+
 function builtGraph(n)
 {
     const graph = new graphology.Graph({type: 'directed'});
@@ -43,79 +68,24 @@ function builtGraph(n)
     return graph;
 }
 
-self.addEventListener("message", (event) => {
-    console.log("Starting to work with data: ", event.data);
-    minNum = Infinity; 
-
-
-   //rebuilt the graph from the input, lazy to do it a more efficient way
-   const graph = builtGraph(event.data);
-
-
-   //calculate the domination number
-   
-   findDominationNumber(graph);
-   console.log("minNum:", minNum);
-
-   postMessage(minNum);
-
-   
-
-});
-
-
-
-
-
-
-function isSetDominating(graph, nodes) {
-            const visited = new Set();
-            for (const node of nodes) {
-                //mark node as visited, if it hasnt been already marked
-
-                if (!visited.has(node)){
-                    visited.add(node);
-                }
-
-
-            
-            
-                graph.forEachOutboundNeighbor(node, (neighbor) => {
-                        if (!visited.has(neighbor)) {
-                            visited.add(neighbor);
-                        }
-                
-                    });
-
-
-            }
-            return visited.size === graph.order;
-}
 
 function isSetDominatingBit(nodes, neighbors, order) {
     let visited = 0n;
     
- 
 
     for (let i = 0; i < order; i++) {
             
-
-
         //Check if the i-th node is in the set, if it is, mark it as visited
         const check = 1n << BigInt(i);
         if (nodes & check) {
             visited |= check;
+            const neighbor = neighbors[i];
+
+            visited |= neighbor;
 
         }
      
-
-        //Now the neighbors
-        const neighbor = neighbors[i];
-
-        visited |= neighbor;
-
-
-
+        
 
         
     }
@@ -133,24 +103,21 @@ function isSetDominatingBit(nodes, neighbors, order) {
 
 function findDominationNumber(graph){
     const neighborhood = [];
-    //First, we convert the graph nodes into a bitmap, for efficency :)
-
-
+    //First, we convert the graph nodes into a bitmap, for efficency :
     
     
  
-
+    const nodes = graph.nodes()
     //iterate through nodes to create the neighbourhood array 
-    for(node of graph.nodes()){
+    for(node of nodes){
       
         //create a bitmask for the neighbors
         let neighbors = 0n;
         graph.forEachOutboundNeighbor(node, (neighbor) => {
-            const i = graph.nodes().indexOf(neighbor);
+            const i = nodes.indexOf(neighbor);
 
             neighbors |= 1n << BigInt(i);
   
-    
 
 
         });
@@ -172,9 +139,8 @@ function findDominationNumber(graph){
    
      
     //check if the remaining nodes are dominating
-    if( isSetDominatingBit(bitNodes, neighborhood, graph.order)) {
+    if(isSetDominatingBit(bitNodes, neighborhood, graph.order)) {
         
-
         search(bitNodes, neighborhood, graph.order);
 
         
@@ -185,8 +151,8 @@ function findDominationNumber(graph){
   }
 
 
-
 }
+
 
 function popcountFast(mask) {
   let count = 0;
@@ -229,19 +195,13 @@ function search(nodes, neighborhood, order) {
 
 
         }
-        
-        
-      
-        
-       
-       
+
        
 
         
 
     }
            
-
 
 
 }
