@@ -1,5 +1,5 @@
 importScripts('https://unpkg.com/graphology@0.24.1/dist/graphology.umd.min.js');
-
+import init, { indDominationNumber } from "./pkg/speed_wasm.js";
 let minNum = Infinity;  
 
 

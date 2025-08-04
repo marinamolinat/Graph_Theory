@@ -7,6 +7,14 @@ updateGraph(3); //Defeaul graph will have n=3
 const loadingDisplay = document.getElementById("loading");
 const resultDisplayer = document.getElementById("result");
 
+
+
+
+
+
+
+
+
 loadingDisplay.style.display = "none"; //Hide the loading display by default
 
 submitButton.addEventListener("click", function(){
