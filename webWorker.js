@@ -104,7 +104,7 @@ function isSetDominatingBit(nodes, neighbors, order) {
         //Check if the i-th node is in the set, if it is, mark it as visited
         const check = 1n << BigInt(i);
         if (nodes & check) {
-            visited | check;
+            visited |= check;
 
         }
      
@@ -119,7 +119,7 @@ function isSetDominatingBit(nodes, neighbors, order) {
 
         
     }
-    console.log("visited:", visited.toString(2));
+ 
     
     if (visited === (BigInt(1) << BigInt(order)) - BigInt(1)) {
         return true; // plss work :8
@@ -169,86 +169,79 @@ function findDominationNumber(graph){
 
     //remove the i-th node 
     bitNodes &= ~(1n << BigInt(i));
-    console.log("bitNodes:", bitNodes.toString(2));
-
+   
+     
     //check if the remaining nodes are dominating
-    console.log("isDominating improved", isSetDominatingBit(bitNodes, neighborhood, graph.order));
+    if( isSetDominatingBit(bitNodes, neighborhood, graph.order)) {
+        
+
+        search(bitNodes, neighborhood, graph.order);
+
+        
+    }
+    
   
 
   }
-
-    const nodes = graph.nodes();
-            
-    for (let node of nodes){
-             
-                const nodesCopy = structuredClone(nodes);
-
-                  //find the value to remove
-                const index = nodesCopy.indexOf(node);
-                nodesCopy.splice(index, 1);
-
-                //checking some stuff...
-
-                const isDominating = isSetDominating(graph, nodesCopy);
-                console.log("isDominating:", isDominating);
-
-
-                if (isDominating){
-                    
-
-                    search(graph, nodesCopy);
-
-
-                }
-
-
-   }
 
 
 
 }
 
+function popcountFast(mask) {
+  let count = 0;
+  while (mask) {
+    mask &= (mask - 1n); // removes the lowest-set bit
+    count++;
+  }
+  return count;
+}
+
+
 
 
 
         
-function search(graph, nodes) {
+function search(nodes, neighborhood, order) {
+
+    for (let i = 0; i < order; i++) {
+        let nody = nodes;
+        
+        //remove the i-th node
+
+        //check if the i-th node is in the set
+        const check = 1n << BigInt(i);
+        if (nodes & check) {
+            //remove the node from the set
+            nody &= ~(1n << BigInt(i));
+
+            if (isSetDominatingBit(nody, neighborhood, order)) {
+           
+
+                if (popcountFast(nody) < minNum) {
+                    minNum = popcountFast(nody);
+                    console.log("New minimum found: ", minNum);
+                }
+
+                //recursion babyyy
+                search(nody, neighborhood, order);
+            }
+
+
+        }
+        
+        
+      
+        
+       
+       
+       
+
+        
+
+    }
            
 
 
-            
-
-            for (let node of nodes) {
-
-                //create a copy of the node set
-                const nodesCopy = structuredClone(nodes);
-
-                //find the value to remove
-                const index = nodesCopy.indexOf(node);
-                nodesCopy.splice(index, 1);
-            
-
-                //Check that the array of nodes is dominative
-                const isDominating = isSetDominating(graph, nodesCopy);
-       
-         
-
-                if (isDominating){
-                   
-
-                    if (nodesCopy.length < minNum) {
-                        minNum = nodesCopy.length;
-               
-                    }
-                    //recursion babyyy
-                    search(graph, nodesCopy);
-
-
-                }
-               
-                
-
-
-            }
 
 }
