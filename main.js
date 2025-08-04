@@ -21,7 +21,7 @@ submitButton.addEventListener("click", function(){
     const input = document.getElementById("inputN");
 
     resultDisplayer.innerHTML = "Result: ";
-    console.log(Number.isInteger(input.value));
+  
 
     if (input.value > 30 || input.value < 2 || !Number.isInteger(Number(input.value))){
         alert("Please choose a number between 2 and 30 inclusive, it should be a whole number");
@@ -65,7 +65,7 @@ function updateGraph (n){
        // add the vertices
     for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red"});
+                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red", label: `(${j}, ${i})` });
 
             }
           

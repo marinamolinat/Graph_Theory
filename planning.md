@@ -44,3 +44,4 @@ then, we start by turning bits off
 and check if the set is dominating by using the neighbourhood array
 and boom kaboom 
 
+

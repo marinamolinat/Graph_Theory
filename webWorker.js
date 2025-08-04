@@ -1,6 +1,7 @@
 importScripts('https://unpkg.com/graphology@0.24.1/dist/graphology.umd.min.js');
 
 let minNum = Infinity;  
+
 function builtGraph(n)
 {
     const graph = new graphology.Graph({type: 'directed'});
@@ -91,34 +92,105 @@ function isSetDominating(graph, nodes) {
             return visited.size === graph.order;
 }
 
+function isSetDominatingBit(nodes, neighbors, order) {
+    let visited = 0n;
+    
+ 
+
+    for (let i = 0; i < order; i++) {
+            
+
+
+        //Check if the i-th node is in the set, if it is, mark it as visited
+        const check = 1n << BigInt(i);
+        if (nodes & check) {
+            visited | check;
+
+        }
+     
+
+        //Now the neighbors
+        const neighbor = neighbors[i];
+
+        visited |= neighbor;
+
+
+
+
+        
+    }
+    console.log("visited:", visited.toString(2));
+    
+    if (visited === (BigInt(1) << BigInt(order)) - BigInt(1)) {
+        return true; // plss work :8
+    }
+    return false; //not dominating
+
+
+
+}
+
 
 function findDominationNumber(graph){
+    const neighborhood = [];
     //First, we convert the graph nodes into a bitmap, for efficency :)
 
-  const totalBits = BigInt(graph.order);
-  
-  const bitNodes =  (BigInt(1) << totalBits) - BigInt(1);
+
+    
+    
  
+
+    //iterate through nodes to create the neighbourhood array 
+    for(node of graph.nodes()){
+      
+        //create a bitmask for the neighbors
+        let neighbors = 0n;
+        graph.forEachOutboundNeighbor(node, (neighbor) => {
+            const i = graph.nodes().indexOf(neighbor);
+
+            neighbors |= 1n << BigInt(i);
+  
+    
+
+
+        });
+
+        
+        neighborhood.push(neighbors);
+    }
+
+    
+
   
    
   //iterate through the graph order, remove a single node at a time
   for (let i = 0; i < graph.order; i++) {
+    let bitNodes =  (BigInt(1) << BigInt(graph.order)) - BigInt(1);
 
-    //convert the i-th bit to 
-    console.log("i:", i);
+    //remove the i-th node 
+    bitNodes &= ~(1n << BigInt(i));
+    console.log("bitNodes:", bitNodes.toString(2));
+
+    //check if the remaining nodes are dominating
+    console.log("isDominating improved", isSetDominatingBit(bitNodes, neighborhood, graph.order));
+  
 
   }
+
     const nodes = graph.nodes();
             
     for (let node of nodes){
+             
                 const nodesCopy = structuredClone(nodes);
 
                   //find the value to remove
                 const index = nodesCopy.indexOf(node);
                 nodesCopy.splice(index, 1);
 
+                //checking some stuff...
 
                 const isDominating = isSetDominating(graph, nodesCopy);
+                console.log("isDominating:", isDominating);
 
 
                 if (isDominating){
