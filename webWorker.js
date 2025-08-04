@@ -75,19 +75,17 @@ function isSetDominatingBit(nodes, neighbors, order) {
 
     for (let i = 0; i < order; i++) {
             
-        //Check if the i-th node is in the set, if it is, mark it as visited
+        //Check if the i-th node is in the set, if it is, mark it as and its neighbours as visited
         const check = 1n << BigInt(i);
         if (nodes & check) {
-            visited |= check;
-            const neighbor = neighbors[i];
 
-            visited |= neighbor;
+            visited |= check;
+            visited |= neighbors[i];
 
         }
      
         
 
-        
     }
  
     
@@ -105,16 +103,19 @@ function findDominationNumber(graph){
     const neighborhood = [];
     //First, we convert the graph nodes into a bitmap, for efficency :
     
-    
+  
  
     const nodes = graph.nodes()
+    const indexOfNode = new Map(nodes.map((node, i) => [node, i]));
+
     //iterate through nodes to create the neighbourhood array 
     for(node of nodes){
       
         //create a bitmask for the neighbors
         let neighbors = 0n;
         graph.forEachOutboundNeighbor(node, (neighbor) => {
-            const i = nodes.indexOf(neighbor);
+            const i = indexOfNode.get(neighbor); // now O(1) instead of O(n)
+
 
             neighbors |= 1n << BigInt(i);
   
@@ -132,6 +133,7 @@ function findDominationNumber(graph){
    
   //iterate through the graph order, remove a single node at a time
   for (let i = 0; i < graph.order; i++) {
+    console.log(i);
     let bitNodes =  (BigInt(1) << BigInt(graph.order)) - BigInt(1);
 
     //remove the i-th node 
@@ -195,8 +197,6 @@ function search(nodes, neighborhood, order) {
 
 
         }
-
-       
 
         
 

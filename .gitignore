@@ -1,0 +1,16 @@
+# Rust
+/target
+
+# wasm-pack output
+/pkg
+
+# Node
+/node_modules
+package-lock.json
+
+# VSCode or other IDEs
+.vscode
+.idea
+
+# macOS
+.DS_Store
