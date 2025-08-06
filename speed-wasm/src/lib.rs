@@ -9,6 +9,5 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn findDominationNumber(bitNodes: u64, order: u32, neighborhood: &[u64]) -> u32{
-     1+1
-    
+    order
 }

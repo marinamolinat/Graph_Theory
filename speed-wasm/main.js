@@ -1,13 +1,11 @@
 
 const submitButton = document.getElementById("submit");
-let myWebWorker = new Worker('webWorker.js');
+let myWebWorker = new Worker('webWorker.js', { type: "module" });
 const graph = new graphology.Graph({type: 'directed'});
 const sigmaInstance = new Sigma(graph, document.getElementById("container"));
 updateGraph(3); //Defeaul graph will have n=3
 const loadingDisplay = document.getElementById("loading");
 const resultDisplayer = document.getElementById("result");
-
-
 
 
 
@@ -24,7 +22,7 @@ submitButton.addEventListener("click", function(){
         myWebWorker.terminate();
     }
 
-    myWebWorker = new Worker('webWorker.js');
+    myWebWorker = new Worker('webWorker.js', { type: "module" });
 
     const input = document.getElementById("inputN");
 
@@ -38,10 +36,13 @@ submitButton.addEventListener("click", function(){
 
 
     //Re draw the graph
-   updateGraph(input.value);
+    updateGraph(input.value);
+
+    //Get info for rust program, which will be first send to a web worker
+    const infoReady = getInfoReady(graph);
 
     //Now, lets send the input value to the web worker
-    myWebWorker.postMessage(input.value);
+    myWebWorker.postMessage(infoReady);
 
     loadingDisplay.style.display = "flex";
 
@@ -58,6 +59,34 @@ submitButton.addEventListener("click", function(){
 
 })
 
+function getInfoReady(graph) //gets the info ready for the rust program 🦀 🦀 🦀
+{
+    const neighborhood = [];
+     const nodes = graph.nodes()
+    const indexOfNode = new Map(nodes.map((node, i) => [node, i]));
+   
+
+    //iterate through nodes to create the neighbourhood array 
+    for(node of nodes){
+      
+        //create a bitmask for the neighbors
+        let neighbors = 0n;
+        graph.forEachOutboundNeighbor(node, (neighbor) => {
+            const i = indexOfNode.get(neighbor); // now O(1) instead of O(n)
+
+
+            neighbors |= 1n << BigInt(i);
+  
+
+
+        });
+
+        
+        neighborhood.push(neighbors);
+    }
+
+    return {nodes: (BigInt(1) << BigInt(graph.order)) - BigInt(1), neighborhood: neighborhood, order: graph.order};
+}
 
 
 
