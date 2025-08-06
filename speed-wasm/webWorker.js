@@ -19,10 +19,10 @@ self.addEventListener("message", (event) => {
        const domNumber = findDominationNumber(event.data.nodes, event.data.order, event.data.neighborhood);
 
        console.log("Domination number found: ", domNumber);
- 
+        postMessage(domNumber);
     });
 
-   postMessage("heyyyyyy, i have to fix this");
+ 
 
    
 
