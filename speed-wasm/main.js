@@ -14,6 +14,7 @@ const personalGraphSubmit = document.getElementById("personalGraphSubmit");
 
 
 personalGraphSubmit.addEventListener("click", function(){
+        resultDisplayer.innerHTML = "Result: ";
     let vertex = document.getElementById("vertexSetInput").value;
     let edge = document.getElementById("edgeSetInput").value;
     
@@ -43,11 +44,18 @@ personalGraphSubmit.addEventListener("click", function(){
     }
 
     myWebWorker = new Worker('webWorker.js', { type: "module" });
-
+     
+    loadingDisplay.style.display = "flex";
+        
     const info = getInfoReady(undirectedGraph);
+
     myWebWorker.postMessage(info);
+
      myWebWorker.onmessage = function(event) {
         console.log("Received data from web worker: ", event.data);
+        resultDisplayer.innerHTML = `Result: ${event.data.domination_number}`;
+        updateColorNodes(undirectedGraph, event.data.dominating_set);
+        loadingDisplay.style.display = "none";
         
 
     };
@@ -77,6 +85,21 @@ function drawPersonalGraph(vertex, edge) {
 
    
    
+}
+
+function updateColorNodes (graph, dominatingSet){
+    const nodes = graph.nodes();
+
+    for (let i = 0; i < graph.order; i++) {
+
+         if (dominatingSet & (1n << BigInt(i)))
+         {
+              graph.setNodeAttribute(nodes[i], 'color', 'green'); // Reset color to red
+         }
+    
+    }
+
+
 }
 
 
@@ -119,7 +142,11 @@ submitButton.addEventListener("click", function(){
     //Receiving the message
     myWebWorker.onmessage = function(event) {
          loadingDisplay.style.display = "none";
-         resultDisplayer.innerHTML = `Result: ${event.data}`;
+         resultDisplayer.innerHTML = `Result: ${event.data.domination_number}`;
+ 
+         //color the nodes in the dominating set
+        updateColorNodes(undirectedGraph, event.data.dominating_set);
+       
         
 
     };

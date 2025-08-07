@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 static mut MIN_NUM: u32 = u32::MAX;
-
+static mut SET: u64 = 0;
 
 pub fn isSetDominating(bitNodes: u64, order: u32, neighborhood: &[u64])-> bool {
     let mut visited: u64 = 0;
@@ -46,6 +46,7 @@ pub fn search(bitNodes: u64, neighborhood: &[u64], order: u32) {
             if(popcorny < unsafe { MIN_NUM }) {
                 unsafe {
                     MIN_NUM = popcorny;
+                    SET = nodes;
                 }
                 
             }
@@ -68,12 +69,26 @@ pub fn popcount_fast(mut mask: u64) -> u32 {
 }
 
 
+#[wasm_bindgen]
+pub struct DominationResult {
+    pub domination_number: u32,
+    pub dominating_set: u64,
+}
 
-
+#[wasm_bindgen]
+impl DominationResult {
+    #[wasm_bindgen(constructor)]
+    pub fn new(domination_number: u32, dominating_set: u64) -> DominationResult {
+        DominationResult {
+            domination_number,
+            dominating_set,
+        }
+    }
+}
 
 
 #[wasm_bindgen]
-pub fn findDominationNumber(bitNodes: u64, order: u32, neighborhood: &[u64]) -> u32{
+pub fn findDominationNumber(bitNodes: u64, order: u32, neighborhood: &[u64]) -> DominationResult{
     
     //iterate through the graph order, remove a single node at a time
     for i in 0..order {
@@ -94,7 +109,11 @@ pub fn findDominationNumber(bitNodes: u64, order: u32, neighborhood: &[u64]) -> 
 
        
     }
-    return unsafe { MIN_NUM };
+   
+    return unsafe {
+         DominationResult::new(MIN_NUM, SET)
+
+     };
     
 }
 

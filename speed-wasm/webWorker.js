@@ -16,10 +16,15 @@ self.addEventListener("message", (event) => {
    
     //send to rust program
     init().then(() => {
-       const domNumber = findDominationNumber(event.data.nodes, event.data.order, event.data.neighborhood);
+       const results = findDominationNumber(event.data.nodes, event.data.order, event.data.neighborhood);
 
-       console.log("Domination number found: ", domNumber);
-        postMessage(domNumber);
+     
+        postMessage({
+            domination_number: results.domination_number,
+            dominating_set: results.dominating_set
+        });
+        
+
     });
 
  
