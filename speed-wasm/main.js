@@ -4,12 +4,80 @@ let myWebWorker = new Worker('webWorker.js', { type: "module" });
 const graph = new graphology.Graph({type: 'directed'});
 const sigmaInstance = new Sigma(graph, document.getElementById("container"));
 updateGraph(3); //Defeaul graph will have n=3
+ const undirectedGraph = new graphology.Graph({type: 'undirected'});
+ const sigmaInstancePersonal = new Sigma(undirectedGraph, document.getElementById("container"));
+ undirectedGraph.clear();
 const loadingDisplay = document.getElementById("loading");
 const resultDisplayer = document.getElementById("result");
+const personalGraphSubmit = document.getElementById("personalGraphSubmit");
 
 
 
+personalGraphSubmit.addEventListener("click", function(){
+    let vertex = document.getElementById("vertexSetInput").value;
+    let edge = document.getElementById("edgeSetInput").value;
+    
+    // Process the vertex input
+    vertex = vertex.replace(/[{}]/g, "").trim();
+    vertex = vertex.split(",").map(el => el.trim());
 
+
+
+    // math
+    let pairs = edge.match(/\(([^)]+)\)/g);
+
+// Convert each pair to an array of numbers
+    edge = pairs.map(pair => {
+    return pair
+  .replace(/[()]/g, '')    // Remove parentheses
+  .split(',')              // Split into elements
+  .map(n => n.trim());  
+});
+
+    drawPersonalGraph(vertex, edge);
+
+    //send info to web worker
+
+    if(myWebWorker){
+        myWebWorker.terminate();
+    }
+
+    myWebWorker = new Worker('webWorker.js', { type: "module" });
+
+    const info = getInfoReady(undirectedGraph);
+    myWebWorker.postMessage(info);
+     myWebWorker.onmessage = function(event) {
+        console.log("Received data from web worker: ", event.data);
+        
+
+    };
+
+    
+
+
+});
+
+
+function drawPersonalGraph(vertex, edge) {
+     graph.clear();
+   undirectedGraph.clear();
+   
+    for(let i = 0; i < vertex.length; i++) {
+        undirectedGraph.addNode(vertex[i], { size: 6, color: "red", label: vertex[i], x: Math.random() *100, y: Math.random() *100});
+    }
+
+    for(let i = 0; i < edge.length; i++) {
+        undirectedGraph.addEdge(edge[i][0], edge[i][1], {size: 2});
+    }
+ sigmaInstancePersonal.refresh();
+    //use plugin to layout the graph
+
+    
+
+
+   
+   
+}
 
 
 
@@ -102,7 +170,7 @@ function updateGraph (n){
        // add the vertices
     for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 10, color: "red", label: `(${j}, ${i})` });
+                 graph.addNode(`(${j}, ${i})`, { x: j, y: i, size: 6, color: "red", label: `(${j}, ${i})` });
 
             }
           
@@ -128,7 +196,7 @@ function updateGraph (n){
                 let toId = `(${newX}, ${newY})`;
 
                 if (graph.hasNode(toId)) {
-                graph.addDirectedEdge(node, toId, {type: 'arrow', size: 4});
+                graph.addDirectedEdge(node, toId, {type: 'arrow', size: 3});
                
                 } 
             }
