@@ -1,0 +1,24 @@
+{
+  "name": "speed-wasm",
+  "type": "module",
+  "collaborators": [
+    "Marina M"
+  ],
+  "description": "calculating domination number",
+  "version": "0.1.0",
+  "license": "MIT/Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marinamolinat/"
+  },
+  "files": [
+    "speed_wasm_bg.wasm",
+    "speed_wasm.js",
+    "speed_wasm.d.ts"
+  ],
+  "main": "speed_wasm.js",
+  "types": "speed_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
