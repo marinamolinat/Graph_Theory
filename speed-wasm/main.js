@@ -3,7 +3,7 @@ const submitButton = document.getElementById("submit");
 let myWebWorker = new Worker('webWorker.js', { type: "module" });
 const graph = new graphology.Graph({type: 'directed'});
 const sigmaInstance = new Sigma(graph, document.getElementById("container"));
-updateGraph(3); //Defeaul graph will have n=3
+
  const undirectedGraph = new graphology.Graph({type: 'undirected'});
  const sigmaInstancePersonal = new Sigma(undirectedGraph, document.getElementById("container"));
  undirectedGraph.clear();
@@ -14,7 +14,7 @@ const personalGraphSubmit = document.getElementById("personalGraphSubmit");
 
 
 personalGraphSubmit.addEventListener("click", function(){
-        resultDisplayer.innerHTML = "Result: ";
+        resultDisplayer.innerHTML = "Domination Number Result:";
     let vertex = document.getElementById("vertexSetInput").value;
     let edge = document.getElementById("edgeSetInput").value;
     
@@ -53,7 +53,7 @@ personalGraphSubmit.addEventListener("click", function(){
 
      myWebWorker.onmessage = function(event) {
         console.log("Received data from web worker: ", event.data);
-        resultDisplayer.innerHTML = `Result: ${event.data.domination_number}`;
+        resultDisplayer.innerHTML = `Domination Number Result: ${event.data.domination_number}`;
         updateColorNodes(undirectedGraph, event.data.dominating_set);
         loadingDisplay.style.display = "none";
         
@@ -98,7 +98,7 @@ function updateColorNodes (graph, dominatingSet){
          }
     
     }
-
+sigmaInstancePersonal.refresh();
 
 }
 
@@ -117,7 +117,7 @@ submitButton.addEventListener("click", function(){
 
     const input = document.getElementById("inputN");
 
-    resultDisplayer.innerHTML = "Result: ";
+    resultDisplayer.innerHTML = "Domination Number Result: ";
   
 
     if (input.value > 30 || input.value < 2 || !Number.isInteger(Number(input.value))){
@@ -142,7 +142,7 @@ submitButton.addEventListener("click", function(){
     //Receiving the message
     myWebWorker.onmessage = function(event) {
          loadingDisplay.style.display = "none";
-         resultDisplayer.innerHTML = `Result: ${event.data.domination_number}`;
+         resultDisplayer.innerHTML = `Domination Number Result:${event.data.domination_number}`;
  
          //color the nodes in the dominating set
         updateColorNodes(undirectedGraph, event.data.dominating_set);
